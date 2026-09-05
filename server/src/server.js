@@ -1,0 +1,2 @@
+import "dotenv/config";import app from "./app.js";import {connectDB} from "./config/database.js";
+const port=process.env.PORT||5000;connectDB().then(()=>app.listen(port,()=>console.log(`AURA API running on ${port}`))).catch(e=>{console.error(e);process.exit(1)});

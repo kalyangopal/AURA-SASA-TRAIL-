@@ -1,0 +1,6 @@
+import express from "express";import cors from "cors";import helmet from "helmet";import cookieParser from "cookie-parser";import rateLimit from "express-rate-limit";import morgan from "morgan";
+import authRoutes from "./routes/authRoutes.js";import memberRoutes from "./routes/memberRoutes.js";import paymentRoutes from "./routes/paymentRoutes.js";import attendanceRoutes from "./routes/attendanceRoutes.js";import settingsRoutes from "./routes/settingsRoutes.js";import reportRoutes from "./routes/reportRoutes.js";import {authenticate} from "./middleware/authenticate.js";import {notFound,errorHandler} from "./middleware/errorHandler.js";
+const app=express();app.use(helmet());app.use(cors({origin:process.env.CLIENT_URL||"http://localhost:5173",credentials:true}));app.use(express.json({limit:"1mb"}));app.use(cookieParser());app.use(morgan("dev"));app.use(rateLimit({windowMs:15*60*1000,max:300}));
+app.get("/api/health",(req,res)=>res.json({ok:true}));app.use("/api/auth",authRoutes);
+app.use("/api/members",authenticate,memberRoutes);app.use("/api/payments",authenticate,paymentRoutes);app.use("/api/attendance",authenticate,attendanceRoutes);app.use("/api/settings",authenticate,settingsRoutes);app.use("/api/reports",authenticate,reportRoutes);
+app.use(notFound);app.use(errorHandler);export default app;

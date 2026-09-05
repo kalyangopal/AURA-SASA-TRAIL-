@@ -1,0 +1,2 @@
+import {createContext,useContext,useEffect,useState} from "react";import api from "../services/api";
+const C=createContext(null);export function AuthProvider({children}){const [auth,setAuth]=useState({loading:true,user:null,tenant:null});useEffect(()=>{api.get("/auth/me").then(r=>setAuth({loading:false,...r.data})).catch(()=>setAuth({loading:false,user:null,tenant:null}))},[]);return <C.Provider value={{...auth,setAuth}}>{children}</C.Provider>}export const useAuth=()=>useContext(C);
